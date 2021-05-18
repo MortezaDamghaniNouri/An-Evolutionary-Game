@@ -1,5 +1,5 @@
 import random
-
+import math
 
 # This function generates random chromosome
 def random_chromosome_generator(chromosome_num, length):
@@ -54,11 +54,6 @@ def qualification_finder(input_chromosome, user_input_array):
     start_location = 0
     point = 0
     while position < len(user_input_array) - 1:
-        print("The position is: " + str(position))
-        print("The point is: " + str(point))
-        print("The points_without_loses: " + str(points_without_loses))
-        print("Eaten: " + str(eaten_mushrooms_number))
-        print("===========")
         # Redundant jumps
         if user_input_array[position] != 'G' and up_or_down(input_chromosome, position, start_location) == "up":
             point += -0.5
@@ -133,19 +128,74 @@ def qualification_finder(input_chromosome, user_input_array):
     point += (position - start_location) + eaten_mushrooms_number * 2
     points_without_loses.append(point)
 
-    print(points_without_loses)
-
     # Finding the maximum point which is achieved by the chromosome
     return max_finder(points_without_loses)
 
 
 # This is the main function of the code which the game executes in
-def game(user_input_array, chromosome_num):
-    random_chromosomes = random_chromosome_generator(chromosome_num, len(user_input_array))
-    qualifications = []
+def game(user_input_array, chromosomes_num):
+    random_chromosomes = random_chromosome_generator(chromosomes_num, len(user_input_array))
+    chromosomes_qualifications = []
     for i in random_chromosomes:
         qualification = qualification_finder(i, user_input_array)
-        qualifications.append(qualification)
+        chromosomes_qualifications.append([i, qualification])
+
+    # Sorting the generated random chromosomes according to their qualifications
+    i = len(chromosomes_qualifications) - 1
+    while i > 0:
+        j = 0
+        while j < i:
+            if chromosomes_qualifications[j][1] > chromosomes_qualifications[j + 1][1]:
+                temp = chromosomes_qualifications[j + 1]
+                chromosomes_qualifications[j + 1] = chromosomes_qualifications[j]
+                chromosomes_qualifications[j] = temp
+            j += 1
+        i = i - 1
+
+    number_of_chosens = math.floor(chromosomes_num / 2)
+
+    # Cross-over
+    j = 0
+    while j < chromosomes_num:
+        father_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
+        mother_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
+        middle_of_chromosome = math.floor(len(random_chromosomes[0]) / 2)
+        offspring_chromosome = []
+        i = 0
+        while i <= middle_of_chromosome:
+            offspring_chromosome.append(chromosomes_qualifications[father_index][0][i])
+            i += 1
+        i = middle_of_chromosome + 1
+        while i < len(random_chromosomes[0]):
+            offspring_chromosome.append(chromosomes_qualifications[mother_index][0][i])
+            i += 1
+        qualification = qualification_finder(offspring_chromosome, user_input_array)
+
+
+
+
+
+        chromosomes_qualifications.append([offspring_chromosome, qualification])
+
+
+
+
+
+
+        j += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
