@@ -33,10 +33,13 @@ def qualification_finder(input_chromosome, user_input_array):
                 if position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G' and input_chromosome[position] == 1:
                     point += -0.5
 
+            # Adding the point of mushroom
+            if position - 1 >= start_position and input_chromosome[position - 1] != 1 and user_input_array[position] == 'M':
+                eaten_mushrooms_number += 1
 
 
         if user_input_array[position + 1] == 'G':
-            if input_chromosome[position] != 1 and position - 1 >= 0 and input_chromosome[position - 1] != 1:
+            if input_chromosome[position] != 1 and position - 1 >= start_position and input_chromosome[position - 1] != 1:
                 # If a lose happen this part of the code will execute
                 point += (position - start_position) + eaten_mushrooms_number * 2
                 start_position = position + 1
@@ -44,8 +47,26 @@ def qualification_finder(input_chromosome, user_input_array):
                 eaten_mushrooms_number = 0
                 point = 0
             # Killing Goumpas is implemented here and this action will add two extra points to the user's points
-            if position - 1 >= 0 and input_chromosome[position - 1] == 1 and input_chromosome[position] == 0:
+            if position - 1 >= start_position and input_chromosome[position - 1] == 1 and input_chromosome[position] == 0:
                 point += 2
+            # Losing because of GG which means two adjacent Goumpa
+            if user_input_array[position] == 'G' and start_position != position:
+                # If a lose happen this part of the code will execute
+                point += (position - start_position) + eaten_mushrooms_number * 2
+                start_position = position + 1
+                points_without_loses.append(point)
+                eaten_mushrooms_number = 0
+                point = 0
+
+            # Adding the point of mushroom
+            if position - 1 >= start_position and input_chromosome[position - 1] != 1 and user_input_array[position] == 'M':
+                eaten_mushrooms_number += 1
+
+            # Killing Goumpas is implemented here and this action will add two extra points to the user's points
+            if user_input_array[position] == 'M' and position - 1 >= start_position and input_chromosome[position - 1] == 1:
+                point += 2
+
+
 
 
         if user_input_array[position + 1] == 'M':
@@ -57,6 +78,9 @@ def qualification_finder(input_chromosome, user_input_array):
                 if position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G' and input_chromosome[position] == 1:
                     point += -0.5
 
+            # Adding the point of mushroom
+            if position - 1 >= start_position and input_chromosome[position - 1] != 1 and user_input_array[position] == 'M':
+                eaten_mushrooms_number += 1
 
 
 
@@ -67,7 +91,7 @@ def qualification_finder(input_chromosome, user_input_array):
 
 
         if user_input_array[position + 1] == 'L':
-            if position - 1 >= 0 and input_chromosome[position - 1] == 1:
+            if position - 1 >= start_position and input_chromosome[position - 1] == 1:
                 # If a lose happen this part of the code will execute
                 point += (position - start_position) + eaten_mushrooms_number * 2
                 start_position = position + 1
@@ -75,7 +99,7 @@ def qualification_finder(input_chromosome, user_input_array):
                 eaten_mushrooms_number = 0
                 point = 0
 
-            if input_chromosome[position] != 2 and position - 1 >= 0 and input_chromosome[position - 1] != 1:
+            if input_chromosome[position] != 2 and position - 1 >= start_position and input_chromosome[position - 1] != 1:
                 # If a lose happen this part of the code will execute
                 point += (position - start_position) + eaten_mushrooms_number * 2
                 start_position = position + 1
@@ -83,8 +107,18 @@ def qualification_finder(input_chromosome, user_input_array):
                 eaten_mushrooms_number = 0
                 point = 0
 
+            # Losing because of GL which means two adjacent Goumpa and Luckipou
+            if user_input_array[position] == 'G' and start_position != position:
+                # If a lose happen this part of the code will execute
+                point += (position - start_position) + eaten_mushrooms_number * 2
+                start_position = position + 1
+                points_without_loses.append(point)
+                eaten_mushrooms_number = 0
+                point = 0
 
-
+            # Adding the point of mushroom
+            if position - 1 >= start_position and input_chromosome[position - 1] != 1 and user_input_array[position] == 'M':
+                eaten_mushrooms_number += 1
 
 
 
