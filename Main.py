@@ -140,6 +140,69 @@ def game(user_input_array, chromosomes_num):
         qualification = qualification_finder(i, user_input_array)
         chromosomes_qualifications.append([i, qualification])
 
+    f = 1
+    while f <= 10:
+        # Sorting the generated random chromosomes according to their qualifications
+        i = len(chromosomes_qualifications) - 1
+        while i > 0:
+            j = 0
+            while j < i:
+                if chromosomes_qualifications[j][1] > chromosomes_qualifications[j + 1][1]:
+                    temp = chromosomes_qualifications[j + 1]
+                    chromosomes_qualifications[j + 1] = chromosomes_qualifications[j]
+                    chromosomes_qualifications[j] = temp
+                j += 1
+            i = i - 1
+
+        print("THE MAXIMUM IS: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
+        number_of_chosens = math.floor(chromosomes_num / 2)
+
+        # Cross-over
+        j = 0
+        while j < chromosomes_num:
+            father_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
+            mother_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
+            middle_of_chromosome = math.floor(len(random_chromosomes[0]) / 2)
+            offspring_chromosome = []
+            i = 0
+            while i <= middle_of_chromosome:
+                offspring_chromosome.append(chromosomes_qualifications[father_index][0][i])
+                i += 1
+            i = middle_of_chromosome + 1
+            while i < len(random_chromosomes[0]):
+                offspring_chromosome.append(chromosomes_qualifications[mother_index][0][i])
+                i += 1
+
+
+
+            # Mutation is implemented here
+            mutation_random_number = random.randint(1, 5)
+            if mutation_random_number == 2:
+                one_counter = 0
+                k = 0
+                while k < len(offspring_chromosome):
+                    if offspring_chromosome[k] == 1:
+                        one_counter += 1
+                    k += 1
+                if one_counter != 0:
+                    random_chromosome_index = random.randint(1, one_counter)
+                    k = 0
+                    m = 0
+                    while k < len(offspring_chromosome):
+                        if offspring_chromosome[k] == 1:
+                            m += 1
+                            if m == random_chromosome_index:
+                                offspring_chromosome[k] = 0
+                                break
+
+                        k += 1
+
+
+            qualification = qualification_finder(offspring_chromosome, user_input_array)
+            chromosomes_qualifications.append([offspring_chromosome, qualification])
+            j += 1
+        f += 1
+
     # Sorting the generated random chromosomes according to their qualifications
     i = len(chromosomes_qualifications) - 1
     while i > 0:
@@ -152,39 +215,8 @@ def game(user_input_array, chromosomes_num):
             j += 1
         i = i - 1
 
-    number_of_chosens = math.floor(chromosomes_num / 2)
-
-    # Cross-over
-    j = 0
-    while j < chromosomes_num:
-        father_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
-        mother_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
-        middle_of_chromosome = math.floor(len(random_chromosomes[0]) / 2)
-        offspring_chromosome = []
-        i = 0
-        while i <= middle_of_chromosome:
-            offspring_chromosome.append(chromosomes_qualifications[father_index][0][i])
-            i += 1
-        i = middle_of_chromosome + 1
-        while i < len(random_chromosomes[0]):
-            offspring_chromosome.append(chromosomes_qualifications[mother_index][0][i])
-            i += 1
-        qualification = qualification_finder(offspring_chromosome, user_input_array)
-
-
-
-
-
-        chromosomes_qualifications.append([offspring_chromosome, qualification])
-
-
-
-
-
-
-        j += 1
-
-
+    print("The total count: " + str(len(chromosomes_qualifications)))
+    print("The last max is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
 
 
 
