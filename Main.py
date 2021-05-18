@@ -25,24 +25,40 @@ def qualification_finder(input_chromosome, user_input_array):
     point = 0
     while position < len(user_input_array):
         if user_input_array[position + 1] == '_':
-            if input_chromosome[position] == 1 and position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G':
+            # Redundant jumps
+            if position != start_position and user_input_array[position] == 'G' and input_chromosome[position] == 1:
                 point += -0.5
+
+            else:
+                if position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G' and input_chromosome[position] == 1:
+                    point += -0.5
 
 
 
         if user_input_array[position + 1] == 'G':
-            if input_chromosome[position] != 1:
+            if input_chromosome[position] != 1 and position - 1 >= 0 and input_chromosome[position - 1] != 1:
                 # If a lose happen this part of the code will execute
                 point += (position - start_position) + eaten_mushrooms_number * 2
                 start_position = position + 1
                 points_without_loses.append(point)
                 eaten_mushrooms_number = 0
                 point = 0
+            # Killing Goumpas is implemented here and this action will add two extra points to the user's points
+            if position - 1 >= 0 and input_chromosome[position - 1] == 1 and input_chromosome[position] == 0:
+                point += 2
 
 
         if user_input_array[position + 1] == 'M':
-            if position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G' and input_chromosome[position] == 1:
+            # Redundant jumps
+            if position != start_position and user_input_array[position] == 'G' and input_chromosome[position] == 1:
                 point += -0.5
+
+            else:
+                if position + 2 < len(user_input_array) and user_input_array[position + 2] != 'G' and input_chromosome[position] == 1:
+                    point += -0.5
+
+
+
 
 
 
@@ -51,12 +67,25 @@ def qualification_finder(input_chromosome, user_input_array):
 
 
         if user_input_array[position + 1] == 'L':
-            if input_chromosome[position] != 2:
+            if position - 1 >= 0 and input_chromosome[position - 1] == 1:
+                # If a lose happen this part of the code will execute
                 point += (position - start_position) + eaten_mushrooms_number * 2
                 start_position = position + 1
                 points_without_loses.append(point)
                 eaten_mushrooms_number = 0
                 point = 0
+
+            if input_chromosome[position] != 2 and position - 1 >= 0 and input_chromosome[position - 1] != 1:
+                # If a lose happen this part of the code will execute
+                point += (position - start_position) + eaten_mushrooms_number * 2
+                start_position = position + 1
+                points_without_loses.append(point)
+                eaten_mushrooms_number = 0
+                point = 0
+
+
+
+
 
 
         position += 1
