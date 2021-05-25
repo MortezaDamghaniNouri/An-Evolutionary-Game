@@ -324,17 +324,6 @@ def game(user_input_array, chromosomes_num):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Main part of the code starts here
 input_file_name = input("Enter the full name of the input test file which you want to execute (the name must contain .txt): ")
 input_file = open("attachments/levels/" + input_file_name, "rt")
