@@ -46,6 +46,85 @@ def up_or_down(input_chromosome, location, start_location):
         return "up"
 
 
+# This function prints the map of the game in each player's step
+#                                                                            O
+#                            O                        O                     /|\
+#           Stood up:       /|\        Sat up:       / \        Jumped:     / \
+#                           / \
+#                          _____
+#
+def map_game_printer(path, chromosome, index):
+    row = len(path)
+    map_array = []
+    i = 1
+    while i <= 6:
+        temp = []
+        j = 0
+        while j < row:
+            temp.append("0")
+            j += 1
+        map_array.append(temp)
+        i += 1
+    i = 0
+    while i < row:
+        if path[i] != '_':
+            map_array[0][i] = "  " + path[i] + "  "
+        i += 1
+    i = 0
+    while i < row:
+        map_array[1][i] = "_____"
+        i += 1
+    gesture = up_or_down(chromosome, index, 0)
+    if gesture == "up":
+        map_array[5][index] = "  O  "
+        map_array[4][index] = " /|\\"
+        map_array[3][index] = " / \\ "
+
+
+
+    if gesture == "down":
+        map_array[3][index] = "  O  "
+        map_array[2][index] = " / \\ "
+
+    i = 0
+    while i <= 5:
+        j = 0
+        while j < row:
+            if map_array[i][j] == "0":
+                map_array[i][j] = "     "
+            j += 1
+
+        i += 1
+
+    i = 5
+    while i >= 0:
+        j = 0
+        line = ""
+        while j < row:
+            line += map_array[i][j] + "    "
+            j += 1
+        print(line)
+        i = i - 1
+
+
+# This function prints the final results of the code
+def result_printer(path, best_generated_chromosome):
+    print("The path is: " + str(path))
+    print("The best generated chromosome is: " + str(best_generated_chromosome))
+    i = 0
+    while i < len(path):
+        map_game_printer(path, best_generated_chromosome, i)
+        print()
+        print()
+        i += 1
+
+
+
+
+
+
+
+
 # This function finds the qualification os an input chromosome
 def qualification_finder(input_chromosome, user_input_array):
     position = 0
@@ -135,7 +214,7 @@ def qualification_finder(input_chromosome, user_input_array):
 # This is the main function of the code which the game executes in
 def game(user_input_array, chromosomes_num):
     random_chromosomes = random_chromosome_generator(chromosomes_num, len(user_input_array))
-    chromosomes_qualifications = []
+    chromosomes_qualifications = []     # Chromosomes and their qualifications are stored here
     for i in random_chromosomes:
         qualification = qualification_finder(i, user_input_array)
         chromosomes_qualifications.append([i, qualification])
@@ -217,7 +296,8 @@ def game(user_input_array, chromosomes_num):
 
     print("The total count: " + str(len(chromosomes_qualifications)))
     print("The last max is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
-
+    best_generated_chromosome = chromosomes_qualifications[len(chromosomes_qualifications) - 1][0]
+    result_printer(user_input_array, best_generated_chromosome)
 
 
 
