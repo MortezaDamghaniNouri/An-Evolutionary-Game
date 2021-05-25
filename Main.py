@@ -119,14 +119,29 @@ def map_game_printer(path, chromosome, index):
 def result_printer(path, best_generated_chromosome):
     print("The path is: " + str(path))
     print("The best generated chromosome is: " + str(best_generated_chromosome))
+    lose = False
     i = 0
     while i < len(path):
         map_game_printer(path, best_generated_chromosome, i)
         print()
         print()
+
+        if path[i] == 'G' and up_or_down(best_generated_chromosome, i, 0) == "down" and up_or_down(best_generated_chromosome, i - 1, 0) != "up":
+            lose = True
+            break
+        if path[i] == 'L' and up_or_down(best_generated_chromosome, i, 0) == "up":
+            lose = True
+            break
+        if path[i] == 'L' and up_or_down(best_generated_chromosome, i, 0) == "down" and i - 1 >= 0 and best_generated_chromosome[i - 1] != 2:
+            lose = True
+            break
+
         i += 1
 
-
+    if lose:
+        print("GAME OVER")
+    else:
+        print("FLAG ACHIEVED")
 
 
 
