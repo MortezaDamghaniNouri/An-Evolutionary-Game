@@ -76,15 +76,23 @@ def map_game_printer(path, chromosome, index):
         i += 1
     gesture = up_or_down(chromosome, index, 0)
     if gesture == "up":
-        map_array[5][index] = "  O  "
-        map_array[4][index] = " /|\\"
+        map_array[5][index] = " \O/ "
+        map_array[4][index] = "  |  "
         map_array[3][index] = " / \\ "
 
 
 
     if gesture == "down":
-        map_array[3][index] = "  O  "
-        map_array[2][index] = " / \\ "
+        if index - 1 >= 0 and up_or_down(chromosome, index - 1, 0) == "down" and chromosome[index - 1] == 2:
+            map_array[3][index] = "  O  "
+            map_array[2][index] = " / \\ "
+        else:
+            map_array[4][index] = "  O  "
+            map_array[3][index] = " /|\\"
+            map_array[2][index] = " / \\ "
+
+
+
 
     i = 0
     while i <= 5:
