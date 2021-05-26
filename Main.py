@@ -6,6 +6,23 @@ import matplotlib.pyplot as plt
 import time
 
 
+# This function checks if the input sample exists in the input list or not
+def does_exist(input_list, sample):
+    i = 0
+    while i < len(input_list):
+        j = 0
+        equal = True
+        while j < len(sample):
+            if input_list[i][j] != sample[j]:
+                equal = False
+                break
+            j += 1
+        if equal:
+            return True
+        i += 1
+    return False
+
+
 # This function generates random chromosome
 def random_chromosome_generator(chromosome_num, length):
     i = 1
@@ -16,8 +33,10 @@ def random_chromosome_generator(chromosome_num, length):
         while j <= length - 1:
             temp.append(random.randint(0, 2))
             j += 1
-        random_chromosomes.append(temp)
-        i += 1
+        if not does_exist(random_chromosomes, temp):
+            random_chromosomes.append(temp)
+            i += 1
+
     return random_chromosomes
 
 
