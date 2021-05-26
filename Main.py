@@ -1,5 +1,10 @@
 import random
 import math
+# This library is used for plotting plots
+import matplotlib.pyplot as plt
+# This library is imported to handle a delay in printing the graphics
+import time
+
 
 # This function generates random chromosome
 def random_chromosome_generator(chromosome_num, length):
@@ -47,8 +52,8 @@ def up_or_down(input_chromosome, location, start_location):
 
 
 # This function prints the map of the game in each player's step
-#                                                                            O
-#                            O                        O                     /|\
+#                                                                           \O/
+#                            O                        O                      |
 #           Stood up:       /|\        Sat up:       / \        Jumped:     / \
 #                           / \
 #                          _____
@@ -116,9 +121,8 @@ def map_game_printer(path, chromosome, index):
 
 
 # This function prints the final results of the code
-def result_printer(path, best_generated_chromosome):
+def graphics_printer(path, best_generated_chromosome):
     print("The path is: " + str(path))
-    print("The best generated chromosome is: " + str(best_generated_chromosome))
     lose = False
     i = 0
     while i < len(path):
@@ -142,10 +146,6 @@ def result_printer(path, best_generated_chromosome):
         print("GAME OVER")
     else:
         print("FLAG ACHIEVED")
-
-
-
-
 
 
 # This function finds the qualification os an input chromosome
@@ -234,13 +234,51 @@ def qualification_finder(input_chromosome, user_input_array):
     return max_finder(points_without_loses)
 
 
+# This function finds the maximum element of an input list
+def maximum_qualification_finder(input_list):
+    maximum = input_list[0]
+    i = 1
+    while i < len(input_list):
+        if input_list[i] > maximum:
+            maximum = input_list[i]
+        i += 1
+
+    return maximum
+
+
+# This function finds the minimum element of an input list
+def minimum_qualification_finder(input_list):
+    minimum = input_list[0]
+    i = 1
+    while i < len(input_list):
+        if input_list[i] < minimum:
+            minimum = input_list[i]
+        i += 1
+
+    return minimum
+
+
+# This function finds the the average of the elements of an input list
+def average_qualification_finder(input_list):
+    sum = 0
+    i = 0
+    while i < len(input_list):
+        sum += input_list[i]
+        i += 1
+
+    return sum/len(input_list)
+
+
 # This is the main function of the code which the game executes in
 def game(user_input_array, chromosomes_num):
+    # Preparing the final plot
+    plt.xlabel("Generation")
+    plt.ylabel("Qualification")
     random_chromosomes = random_chromosome_generator(chromosomes_num, len(user_input_array))
     chromosomes_qualifications = []     # Chromosomes and their qualifications are stored here
     for i in random_chromosomes:
         qualification = qualification_finder(i, user_input_array)
-        chromosomes_qualifications.append([i, qualification])
+        chromosomes_qualifications.append([i, qualification, 0])
 
     f = 1
     while f <= 10:
@@ -256,11 +294,12 @@ def game(user_input_array, chromosomes_num):
                 j += 1
             i = i - 1
 
-        print("THE MAXIMUM IS: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
+        # print("THE " + str(f) + "th round maximum is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
         number_of_chosens = math.floor(chromosomes_num / 2)
 
         # Cross-over
         j = 0
+        new_generation_qualifications = []
         while j < chromosomes_num:
             father_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
             mother_index = random.randint(number_of_chosens, len(chromosomes_qualifications) - 1)
@@ -299,10 +338,23 @@ def game(user_input_array, chromosomes_num):
 
                         k += 1
 
-
+            # Adding the generated offspring to chromosomes_qualifications list
             qualification = qualification_finder(offspring_chromosome, user_input_array)
-            chromosomes_qualifications.append([offspring_chromosome, qualification])
+            chromosomes_qualifications.append([offspring_chromosome, qualification, f])
+            new_generation_qualifications.append(qualification)
             j += 1
+
+        minimum_qualification = minimum_qualification_finder(new_generation_qualifications)
+        maximum_qualification = maximum_qualification_finder(new_generation_qualifications)
+        average_qualification = average_qualification_finder(new_generation_qualifications)
+
+        # Plotting the statistics
+        plt.scatter([f], [maximum_qualification], color="blue")   # This color is for maximum
+        plt.scatter([f], [average_qualification], color="orange")   # This color is for average
+        plt.scatter([f], [minimum_qualification], color="green")   # This color is for minimum
+
+
+
         f += 1
 
     # Sorting the generated random chromosomes according to their qualifications
@@ -317,10 +369,15 @@ def game(user_input_array, chromosomes_num):
             j += 1
         i = i - 1
 
-    print("The total count: " + str(len(chromosomes_qualifications)))
-    print("The last max is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
+    print()
+    print()
+    print("*** The best generated chromosome is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1][0]) + " from " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1][2]) + "th generation with " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1][1]) + " qualification ***")  # Here the generation of the best chromosome is printed
     best_generated_chromosome = chromosomes_qualifications[len(chromosomes_qualifications) - 1][0]
-    result_printer(user_input_array, best_generated_chromosome)
+    graphics_printer(user_input_array, best_generated_chromosome)
+    time.sleep(0.001)
+    # Showing the plots
+    plt.legend()
+    plt.show()
 
 
 
