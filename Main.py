@@ -294,6 +294,7 @@ def game(user_input_array, chromosomes_num):
     plt.xlabel("Generation")
     plt.ylabel("Qualification")
     random_chromosomes = random_chromosome_generator(chromosomes_num, len(user_input_array))
+    print("Random chromosomes generated")
     chromosomes_qualifications = []     # Chromosomes and their qualifications are stored here
     for i in random_chromosomes:
         qualification = qualification_finder(i, user_input_array)
@@ -314,6 +315,7 @@ def game(user_input_array, chromosomes_num):
             i = i - 1
 
         # print("THE " + str(f) + "th round maximum is: " + str(chromosomes_qualifications[len(chromosomes_qualifications) - 1]))
+        print(str(f) + "th generation finished")
         number_of_chosens = math.floor(chromosomes_num / 2)
 
         # Cross-over
@@ -371,7 +373,11 @@ def game(user_input_array, chromosomes_num):
         plt.scatter([f], [maximum_qualification], color="blue")   # This color is for maximum
         plt.scatter([f], [average_qualification], color="orange")   # This color is for average
         plt.scatter([f], [minimum_qualification], color="green")   # This color is for minimum
-
+        print(str(f) + "th generation statistics: ")
+        print("Maximum Qualification: " + str(maximum_qualification))
+        print("Average Qualification: " + str(average_qualification))
+        print("Minimum Qualification: " + str(minimum_qualification))
+        print("===============================================================")
 
 
         f += 1
@@ -412,41 +418,6 @@ while True:
 
 # The second input determines the amount of first chromosome population
 game(input_array, 200)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
